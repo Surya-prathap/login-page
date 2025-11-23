@@ -1,14 +1,17 @@
 "use client";
+
 import { useEffect } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { setUserId, setAccCreated } from "../../utils/storage";
 import { fetchBasicProfile } from "../../api/profile";
 
 export default function Manager() {
   const router = useRouter();
-  const params = useSearchParams();
 
   useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const params = new URLSearchParams(window.location.search);
     const id = params.get("userID");
 
     if (!id) {
@@ -20,7 +23,7 @@ export default function Manager() {
 
     fetchBasicProfile(id)
       .then((res) => {
-        const acc = String(res?.accCreated ?? "0"); // coerce to string safely
+        const acc = String(res?.accCreated ?? "0");
 
         if (acc === "1") {
           setAccCreated("1");
@@ -34,7 +37,7 @@ export default function Manager() {
         setAccCreated("0");
         router.replace("/create-profile");
       });
-  }, [params, router]);
+  }, [router]);
 
   return (
     <div className="page login-bg">

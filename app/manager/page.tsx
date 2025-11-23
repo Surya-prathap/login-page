@@ -20,9 +20,9 @@ export default function Manager() {
 
     fetchBasicProfile(id)
       .then((res) => {
-        const acc = res?.accCreated;
+        const acc = String(res?.accCreated ?? "0"); // coerce to string safely
 
-        if (acc === 1 || acc === "1") {
+        if (acc === "1") {
           setAccCreated("1");
           router.replace("/dashboard");
         } else {
@@ -34,7 +34,7 @@ export default function Manager() {
         setAccCreated("0");
         router.replace("/create-profile");
       });
-  }, []);
+  }, [params, router]);
 
   return (
     <div className="page login-bg">
